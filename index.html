@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktives Arbeitsblatt: Positive Zahlen addieren und subtrahieren</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --error: #dc2626;
+            --error-bg: #fee2e2;
+            --hint-bg: #fef3c7;
+            --hint-border: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        header {
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin: 0 0 5px 0;
+            font-size: 1.6rem;
+        }
+
+        header h2 {
+            font-size: 1.2rem;
+            color: #64748b;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .score-bar {
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            background: #ffffff;
+            border: 2px solid var(--primary);
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-bar span {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .section-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+        }
+
+        input[type="text"], select {
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+
+        input[type="text"].inline {
+            width: auto;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        input.correct, select.correct {
+            border-color: var(--success) !important;
+            background-color: var(--success-bg) !important;
+        }
+
+        input.incorrect, select.incorrect {
+            border-color: var(--error) !important;
+            background-color: var(--error-bg) !important;
+        }
+
+        .numberline-container {
+            background: #fafafa;
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button.secondary {
+            background-color: #64748b;
+        }
+
+        button.secondary:hover {
+            background-color: #475569;
+        }
+
+        .hint-box {
+            background-color: var(--hint-bg);
+            border-left: 4px solid var(--hint-border);
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 0 4px 4px 0;
+            display: none;
+        }
+
+        .merkkasten {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .merk-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .merk-header {
+            font-weight: bold;
+            color: #334155;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .task-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .merkkasten {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>I Rechnen mit rationalen Zahlen</h1>
+        <h2>3. Positive Zahlen addieren und subtrahieren (Interaktives Arbeitsblatt)</h2>
+    </header>
+
+    <!-- Punkte & Steuerung -->
+    <div class="score-bar">
+        <div>
+            <span>Fortschritt: </span>
+            <span id="score-display">0 / 0 Punkte</span>
+        </div>
+        <div>
+            <button onclick="checkAnswers()">Antworten prüfen</button>
+            <button class="secondary" onclick="resetForm()">Zurücksetzen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 1 -->
+    <div class="section-card">
+        <div class="section-title">
+            1. Wetterstationen & Temperaturänderungen (01.05.2018)
+        </div>
+        <p>Wetterstationen an unterschiedlichen Standorten haben für den 01.05.2018 folgende Temperaturen gemessen (Messzeit: 9 Uhr vormittags). Trage für jede Temperaturänderung den passenden Term und die Nachmittagstemperatur ein.</p>
+
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Standort</th>
+                        <th>9 Uhr</th>
+                        <th>Änderung (bis 12 Uhr)</th>
+                        <th>Nachmittag</th>
+                        <th>Term</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Gelsenkirchen (D)</strong></td>
+                        <td>13 °C</td>
+                        <td>Anstieg um 4 °C</td>
+                        <td><input type="text" id="q1_1_temp" data-ans="17 °C|17°C|17" placeholder="z. B. 17 °C"></td>
+                        <td><input type="text" id="q1_1_term" data-ans="13+4=17|13 + 4 = 17|13+4" placeholder="13+4=17"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stuttgart (D)</strong></td>
+                        <td>11 °C</td>
+                        <td>Abkühlung um 2 °C</td>
+                        <td><input type="text" id="q1_2_temp" data-ans="9 °C|9°C|9" placeholder="z. B. 9 °C"></td>
+                        <td><input type="text" id="q1_2_term" data-ans="11-2=9|11 - 2 = 9|11-2" placeholder="z. B. 11-2=9"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Nuuk (Grönland)</strong></td>
+                        <td>−5 °C</td>
+                        <td>Abkühlung um 3 °C</td>
+                        <td><input type="text" id="q1_3_temp" data-ans="-8 °C|-8°C|-8"></td>
+                        <td><input type="text" id="q1_3_term" data-ans="-5-3=-8|-5 - 3 = -8|-5-3"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Innsbruck (A)</strong></td>
+                        <td>6 °C</td>
+                        <td>Anstieg um 7 °C</td>
+                        <td><input type="text" id="q1_4_temp" data-ans="13 °C|13°C|13"></td>
+                        <td><input type="text" id="q1_4_term" data-ans="6+7=13|6 + 7 = 13|6+7"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Baker Lake (CDN)</strong></td>
+                        <td>−10 °C</td>
+                        <td>Anstieg um 4 °C</td>
+                        <td><input type="text" id="q1_5_temp" data-ans="-6 °C|-6°C|-6"></td>
+                        <td><input type="text" id="q1_5_term" data-ans="-10+4=-6|-10 + 4 = -6|-10+4"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reykjavík (IS)</strong></td>
+                        <td>−3 °C</td>
+                        <td>Anstieg um 4 °C</td>
+                        <td><input type="text" id="q1_6_temp" data-ans="1 °C|1°C|1"></td>
+                        <td><input type="text" id="q1_6_term" data-ans="-3+4=1|-3 + 4 = 1|-3+4"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Interaktive Zahlengerade zur Veranschaulichung -->
+        <div class="numberline-container">
+            <h3>Visualisierung auf der Zahlengeraden</h3>
+            <p style="font-size: 0.9rem; color: #64748b;">Klicke auf einen Standort unter Null, um die Temperaturveränderung als Pfeil anzuzeigen:</p>
+            <div class="btn-group" style="justify-content: center; margin-bottom: 15px;">
+                <button type="button" class="secondary" onclick="drawArrow(-5, -8, 'Nuuk (-5°C - 3 = -8°C)')">Nuuk (-3°C)</button>
+                <button type="button" class="secondary" onclick="drawArrow(-10, -6, 'Baker Lake (-10°C + 4 = -6°C)')">Baker Lake (+4°C)</button>
+                <button type="button" class="secondary" onclick="drawArrow(-3, 1, 'Reykjavík (-3°C + 4 = 1°C)')">Reykjavík (+4°C)</button>
+            </div>
+            <svg id="numberline-svg" viewBox="0 0 800 120" style="width: 100%; max-width: 750px; height: auto;"></svg>
+        </div>
+    </div>
+
+    <!-- AUFGABE 1b: MERKKASTEN -->
+    <div class="section-card">
+        <div class="section-title">
+            1b. Merkkasten vervollständigen
+        </div>
+        <p>Ergänze die fehlenden Lücken zur Bewegung auf der Zahlengeraden:</p>
+
+        <div style="margin-bottom: 15px;">
+            <strong style="color: var(--primary);">1. Die 0 wird überschritten</strong>
+            <div class="merkkasten">
+                <div class="merk-box">
+                    <div class="merk-header">Addieren</div>
+                    <p><strong>Beispiel:</strong> −3 + 7 = 4</p>
+                    <p>Man startet bei −3 und bewegt sich 7 Einheiten nach rechts. Nach 3 Einheiten erreicht man die 0. Von 0 geht man noch 4 Einheiten weiter, denn 7 − 3 = 4.</p>
+                </div>
+                <div class="merk-box">
+                    <div class="merk-header">Subtrahieren</div>
+                    <p><strong>Beispiel:</strong> 4 − 9 = −5</p>
+                    <p>Man startet bei 
+                        <input type="text" class="inline" id="mb_1" data-ans="4"> 
+                        und bewegt sich 9 Einheiten nach links. Nach 
+                        <input type="text" class="inline" id="mb_2" data-ans="4"> 
+                        Einheiten erreicht man die 0. Von 0 geht man noch 
+                        <input type="text" class="inline" id="mb_3" data-ans="5"> 
+                        Einheiten weiter nach links, denn 9 − 4 = 5.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <strong style="color: var(--primary);">2. Die 0 wird nicht überschritten</strong>
+            <div class="merkkasten">
+                <div class="merk-box">
+                    <div class="merk-header">Addieren</div>
+                    <p><strong>Beispiel:</strong> −8 + 2 = 
+                        <input type="text" class="inline" id="mb_4" data-ans="-6">
+                    </p>
+                    <p>Man startet bei 
+                        <input type="text" class="inline" id="mb_5" data-ans="-8"> 
+                        und bewegt sich 
+                        <input type="text" class="inline" id="mb_6" data-ans="2"> 
+                        Einheiten nach 
+                        <select id="mb_7" data-ans="rechts">
+                            <option value="">-- wähle --</option>
+                            <option value="rechts">rechts</option>
+                            <option value="links">links</option>
+                        </select>. 
+                        Man bleibt im Negativen. Zum Erreichen der 0 fehlen noch 
+                        <input type="text" class="inline" id="mb_8" data-ans="6"> 
+                        Einheiten, denn 8 − 2 = 
+                        <input type="text" class="inline" id="mb_9" data-ans="6">.
+                    </p>
+                </div>
+                <div class="merk-box">
+                    <div class="merk-header">Subtrahieren</div>
+                    <p><strong>Beispiel:</strong> −4 − 6 = 
+                        <input type="text" class="inline" id="mb_10" data-ans="-10">
+                    </p>
+                    <p>Man startet bei 
+                        <input type="text" class="inline" id="mb_11" data-ans="-4"> 
+                        und bewegt sich 
+                        <input type="text" class="inline" id="mb_12" data-ans="6"> 
+                        Einheiten nach 
+                        <select id="mb_13" data-ans="links">
+                            <option value="">-- wähle --</option>
+                            <option value="rechts">rechts</option>
+                            <option value="links">links</option>
+                        </select>. 
+                        Jetzt befindet man sich 
+                        <input type="text" class="inline" id="mb_14" data-ans="10"> 
+                        Einheiten links von der 0, denn 4 + 6 = 
+                        <input type="text" class="inline" id="mb_15" data-ans="10">.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUFGABE 2 -->
+    <div class="section-card">
+        <div class="section-title">
+            2. Berechne die Ergebnisse & Nebenrechnungen
+        </div>
+        <p>Überlege dir, ob die 0 überschritten wird oder nicht, und schließe daraus auf das Vorzeichen.</p>
+
+        <div class="task-item">
+            <p><strong>a)</strong> −8 + 5 = 
+                <input type="text" class="inline" id="q2_a_res" data-ans="-3">
+            </p>
+            <p>
+                Wird die 0 überschritten? 
+                <select id="q2_a_cross" data-ans="nein">
+                    <option value="">-- Wählen --</option>
+                    <option value="ja">Ja, 0 wird überschritten</option>
+                    <option value="nein">Nein, 0 wird nicht überschritten</option>
+                </select>
+            </p>
+            <p>Nebenrechnung: 
+                <input type="text" class="inline" id="q2_a_nr" data-ans="8-5=3|8 - 5 = 3" style="width: 200px;">
+            </p>
+        </div>
+
+        <div class="task-item">
+            <p><strong>b)</strong> −2,3 + 3,3 = 
+                <input type="text" class="inline" id="q2_b_res" data-ans="1|1,0">
+            </p>
+            <p>
+                Wird die 0 überschritten? 
+                <select id="q2_b_cross" data-ans="ja">
+                    <option value="">-- Wählen --</option>
+                    <option value="ja">Ja, 0 wird überschritten</option>
+                    <option value="nein">Nein, 0 wird nicht überschritten</option>
+                </select>
+            </p>
+            <p>Nebenrechnung: 
+                <input type="text" class="inline" id="q2_b_nr" data-ans="3,3-2,3=1|3,3 - 2,3 = 1" style="width: 200px;">
+            </p>
+        </div>
+
+        <div class="task-item">
+            <p><strong>c)</strong> −<sup>2</sup>/<sub>5</sub> − <sup>10</sup>/<sub>25</sub> = 
+                <input type="text" class="inline" id="q2_c_res" data-ans="-4/5|-0,8|-8/10">
+            </p>
+            <p>
+                Wird die 0 überschritten? 
+                <select id="q2_c_cross" data-ans="nein">
+                    <option value="">-- Wählen --</option>
+                    <option value="ja">Ja, 0 wird überschritten</option>
+                    <option value="nein">Nein, 0 wird nicht überschritten</option>
+                </select>
+            </p>
+            <p>Nebenrechnung: 
+                <input type="text" class="inline" id="q2_c_nr" data-ans="2/5+2/5=4/5|2/5+10/25=4/5|2/5 + 2/5 = 4/5" style="width: 250px;">
+            </p>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button onclick="toggleHint()">Tipps anzeigen / verbergen</button>
+    </div>
+
+    <div id="hint-box" class="hint-box">
+        <strong>💡 Tipps zum Rechnen mit rationalen Zahlen:</strong>
+        <ul>
+            <li><strong>Gleiche Vorzeichen (− und −):</strong> Beträge addieren und das Minuszeichen beibehalten (z. B. −4 − 6 → 4 + 6 = 10, Ergebnis: −10).</li>
+            <li><strong>Verschiedene Vorzeichen (− und +):</strong> Den kleineren Betrag vom größeren abziehen. Das Vorzeichen richtet sich danach, welche Zahl weiter von der 0 entfernt ist.</li>
+            <li><strong>Brüche kürzen:</strong> <sup>10</sup>/<sub>25</sub> lässt sich mit 5 kürzen zu <sup>2</sup>/<sub>5</sub>!</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    // Zahlengerade SVG zeichnen
+    function renderNumberLine() {
+        const svg = document.getElementById('numberline-svg');
+        let html = '';
+        const min = -12;
+        const max = 5;
+        const width = 750;
+        const startX = 40;
+        const endX = width - 40;
+        const stepX = (endX - startX) / (max - min);
+        const y = 80;
+
+        // Hauptlinie
+        html += `<line x1="${startX - 15}" y1="${y}" x2="${endX + 15}" y2="${y}" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>`;
+        html += `<defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                <polygon points="0 0, 8 4, 0 8" fill="#333" />
+            </marker>
+        </defs>`;
+
+        // Ticks & Beschriftung
+        for (let i = min; i <= max; i++) {
+            const x = startX + (i - min) * stepX;
+            const isZero = i === 0;
+            html += `<line x1="${x}" y1="${y - (isZero ? 10 : 5)}" x2="${x}" y2="${y + (isZero ? 10 : 5)}" stroke="${isZero ? '#2563eb' : '#666'}" stroke-width="${isZero ? '3' : '1.5'}"/>`;
+            html += `<text x="${x}" y="${y + 25}" font-size="12" text-anchor="middle" fill="${isZero ? '#2563eb' : '#333'}" font-weight="${isZero ? 'bold' : 'normal'}">${i}</text>`;
+        }
+
+        svg.innerHTML = html;
+    }
+
+    function drawArrow(fromVal, toVal, labelText) {
+        renderNumberLine();
+        const svg = document.getElementById('numberline-svg');
+        const min = -12;
+        const max = 5;
+        const startX = 40;
+        const endX = 750 - 40;
+        const stepX = (endX - startX) / (max - min);
+        const y = 80;
+
+        const x1 = startX + (fromVal - min) * stepX;
+        const x2 = startX + (toVal - min) * stepX;
+        const curveY = y - 35;
+
+        let path = `M ${x1} ${y - 8} Q ${(x1 + x2) / 2} ${curveY - 15} ${x2} ${y - 8}`;
+        
+        let arrowHtml = `<path d="${path}" fill="none" stroke="#dc2626" stroke-width="2.5" marker-end="url(#red-arrow)" />`;
+        arrowHtml += `<circle cx="${x1}" cy="${y - 8}" r="4" fill="#dc2626" />`;
+        arrowHtml += `<text x="${(x1 + x2) / 2}" y="${curveY - 20}" font-size="13" font-weight="bold" fill="#dc2626" text-anchor="middle">${labelText}</text>`;
+
+        // Marker hinzufügen
+        let defs = svg.querySelector('defs');
+        defs.innerHTML += `
+            <marker id="red-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                <polygon points="0 0, 8 4, 0 8" fill="#dc2626" />
+            </marker>`;
+
+        svg.innerHTML += arrowHtml;
+    }
+
+    function cleanString(str) {
+        if (!str) return '';
+        return str.toString().trim().toLowerCase().replace(/\s+/g, '').replace('°c', '').replace('°', '');
+    }
+
+    function checkAnswers() {
+        const inputs = document.querySelectorAll('input[data-ans], select[data-ans]');
+        let correctCount = 0;
+        let totalCount = inputs.length;
+
+        inputs.forEach(input => {
+            const rawAns = input.getAttribute('data-ans');
+            const possibleAnswers = rawAns.split('|').map(cleanString);
+            const userVal = cleanString(input.value);
+
+            if (userVal !== '' && possibleAnswers.includes(userVal)) {
+                input.classList.add('correct');
+                input.classList.remove('incorrect');
+                correctCount++;
+            } else {
+                input.classList.add('incorrect');
+                input.classList.remove('correct');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('score-display');
+        scoreDisplay.textContent = `${correctCount} / ${totalCount} Punkte`;
+        scoreDisplay.style.color = (correctCount === totalCount) ? 'var(--success)' : 'var(--text)';
+    }
+
+    function resetForm() {
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            if (input.tagName === 'SELECT') {
+                input.selectedIndex = 0;
+            } else {
+                input.value = '';
+            }
+            input.classList.remove('correct', 'incorrect');
+        });
+        document.getElementById('score-display').textContent = `0 / ${document.querySelectorAll('input[data-ans], select[data-ans]').length} Punkte`;
+        renderNumberLine();
+    }
+
+    function toggleHint() {
+        const hintBox = document.getElementById('hint-box');
+        hintBox.style.display = (hintBox.style.display === 'block') ? 'none' : 'block';
+    }
+
+    // Initialisierung beim Laden
+    window.onload = function() {
+        renderNumberLine();
+        const total = document.querySelectorAll('input[data-ans], select[data-ans]').length;
+        document.getElementById('score-display').textContent = `0 / ${total} Punkte`;
+    };
+</script>
+
+</body>
+</html>
